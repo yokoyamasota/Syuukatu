@@ -37,7 +37,8 @@ void Model::Init(const ModelInitData& initData)
 		initData.m_psEntryPointFunc,
 		initData.m_expandConstantBuffer,
 		initData.m_expandConstantBufferSize,
-		initData.m_expandShaderResoruceView
+		initData.m_expandShaderResoruceView,
+		initData.m_colorBufferFormat
 	);
 
 	UpdateWorldMatrix(g_vec3Zero, g_quatIdentity, g_vec3One);
@@ -78,5 +79,19 @@ void Model::Draw(RenderContext& rc)
 		m_world, 
 		g_camera3D->GetViewMatrix(), 
 		g_camera3D->GetProjectionMatrix()
+	);
+}
+void Model::Draw(RenderContext& rc, Camera& camera)
+{
+	Draw(rc, camera.GetViewMatrix(), camera.GetProjectionMatrix());
+}
+
+void Model::Draw(RenderContext& rc, const Matrix& viewMatrix, const Matrix& projMatrix)
+{
+	m_meshParts.Draw(
+		rc,
+		m_world,
+		viewMatrix,
+		projMatrix
 	);
 }

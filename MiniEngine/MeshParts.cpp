@@ -26,7 +26,8 @@ void MeshParts::InitFromTkmFile(
 	const char* psEntryPointFunc,
 	void* expandData,
 	int expandDataSize,
-	IShaderResource* expandShaderResourceView
+	const std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV>& expandShaderResourceView,
+	const std::array<DXGI_FORMAT, MAX_RENDERING_TARGET>& colorBufferFormat
 )
 {
 	m_meshs.resize(tkmFile.GetNumMesh());
@@ -69,8 +70,10 @@ void MeshParts::CreateDescriptorHeaps()
 			descriptorHeap.RegistShaderResource(1, mesh->m_materials[matNo]->GetNormalMap());		//法線マップ。
 			descriptorHeap.RegistShaderResource(2, mesh->m_materials[matNo]->GetSpecularMap());		//スペキュラマップ。
 			descriptorHeap.RegistShaderResource(3, m_boneMatricesStructureBuffer);							//ボーンのストラクチャードバッファ。
-			if (m_expandShaderResourceView){
-				descriptorHeap.RegistShaderResource(EXPAND_SRV_REG__START_NO, *m_expandShaderResourceView);
+			for (int i = 0; i < MAX_MODEL_EXPAND_SRV; i++) {
+				if (m_expandShaderResourceView[i]) {
+					descriptorHeap.RegistShaderResource(EXPAND_SRV_REG__START_NO + i, *m_expandShaderResourceView[i]);
+				}
 			}
 			descriptorHeap.RegistConstantBuffer(0, m_commonConstantBuffer);
 			if (m_expandConstantBuffer.IsValid()) {

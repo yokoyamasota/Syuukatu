@@ -22,9 +22,20 @@ struct ModelInitData {
 	const char* m_fxFilePath = nullptr;								//.fxファイルのファイルパス。
 	void* m_expandConstantBuffer = nullptr;							//ユーザー拡張の定数バッファ。
 	int m_expandConstantBufferSize = 0;								//ユーザー拡張の定数バッファのサイズ。
-	IShaderResource* m_expandShaderResoruceView = nullptr;			//ユーザー拡張のシェーダーリソース。
+	//IShaderResource* m_expandShaderResoruceView = nullptr;			//ユーザー拡張のシェーダーリソース。
+	std::array<IShaderResource*, MAX_MODEL_EXPAND_SRV> m_expandShaderResoruceView = { nullptr };			//ユーザー拡張のシェーダーリソース。
 	Skeleton* m_skeleton = nullptr;									//スケルトン。
 	EnModelUpAxis m_modelUpAxis = enModelUpAxisZ;					//モデルの上方向。
+	std::array<DXGI_FORMAT, MAX_RENDERING_TARGET> m_colorBufferFormat = { 
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+	};	//レンダリングするカラーバッファのフォーマット。
 };
 
 /// <summary>
@@ -51,7 +62,20 @@ public:
 	/// 描画
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
-	void Draw(RenderContext& renderContext);
+	void Draw(RenderContext& rc);
+	/// <summary>
+	/// 描画(カメラ指定版)
+	/// </summary>
+	/// <param name="renderContext">レンダリングコンテキスト</param>
+	/// <param name="camera">カメラ</param>
+	void Draw(RenderContext& rc, Camera& camera);
+	/// <summary>
+	/// 描画(カメラ行列指定版)
+	/// </summary>
+	/// <param name="renderContext">レンダリングコンテキスト</param>
+	/// <param name="viewMatrix">ビュー行列</param>
+	/// <param name="projMatrix">プロジェクション行列</param>
+	void Draw(RenderContext& renderContext, const Matrix& viewMatrix, const Matrix& projMatrix);
 	/// <summary>
 	/// ワールド行列を取得。
 	/// </summary>

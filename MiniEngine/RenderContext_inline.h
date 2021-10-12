@@ -64,6 +64,31 @@ inline void RenderContext::SetRenderTargets(UINT numRT, RenderTarget* renderTarg
 	m_commandList->OMSetRenderTargets(numRT, rtDSHandleTbl, FALSE, &dsDS);
 
 }
+inline void RenderContext::SetRenderTargetAndViewport(RenderTarget& renderTarget)
+{
+	D3D12_VIEWPORT viewport;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = static_cast<float>(renderTarget.GetWidth());
+	viewport.Height = static_cast<float>(renderTarget.GetHeight());
+	viewport.MinDepth = D3D12_MIN_DEPTH;
+	viewport.MaxDepth = D3D12_MAX_DEPTH;
+	SetViewportAndScissor(viewport);
+
+	SetRenderTarget(renderTarget);
+}
+inline void RenderContext::SetRenderTargetsAndViewport(UINT numRT, RenderTarget* renderTargets[])
+{
+	D3D12_VIEWPORT viewport;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = static_cast<float>(renderTargets[0]->GetWidth());
+	viewport.Height = static_cast<float>(renderTargets[0]->GetHeight());
+	viewport.MinDepth = D3D12_MIN_DEPTH;
+	viewport.MaxDepth = D3D12_MAX_DEPTH;
+	SetViewportAndScissor(viewport);
+	SetRenderTargets(numRT, renderTargets);
+}
 inline void RenderContext::ClearRenderTargetViews(int numRt, RenderTarget* renderTargets[])
 {
 	ClearDepthStencilView(renderTargets[0]->GetDSVCpuDescriptorHandle(), renderTargets[0]->GetDSVClearValue());
