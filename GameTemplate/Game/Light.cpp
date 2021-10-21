@@ -2,7 +2,7 @@
 
 namespace
 {
-	const Vector3 DIRLIG_DIR = { 1.0f, 1.0f ,1.0f };	//ディレクションライトの初期方向
+	const Vector3 DIRLIG_DIR = { 1.0f, 1.0f ,-1.0f };	//ディレクションライトの初期方向
 	const Vector3 DIRLIG_COL = { 1.0f, 1.0f ,1.0f };	//ディレクションライトの初期色
 
 	const Vector3 SPOLIG_POS = { 0.0f, 0.0f ,0.0f };	//スポットライトの初期位置
@@ -31,6 +31,13 @@ Light::~Light()
 
 void Light::Update()
 {
+	// ライトの強さを変更する
+	m_ligData.dirLigData.ligColor.x += g_pad[0]->IsPress(enButtonA) * 0.05f;
+	m_ligData.dirLigData.ligColor.y += g_pad[0]->IsPress(enButtonA) * 0.05f;
+	m_ligData.dirLigData.ligColor.z += g_pad[0]->IsPress(enButtonA) * 0.05f;
+	m_ligData.dirLigData.ligColor.x -= g_pad[0]->IsPress(enButtonB) * 0.05f;
+	m_ligData.dirLigData.ligColor.y -= g_pad[0]->IsPress(enButtonB) * 0.05f;
+	m_ligData.dirLigData.ligColor.z -= g_pad[0]->IsPress(enButtonB) * 0.05f;
 
 }
 

@@ -9,8 +9,7 @@ private:
 	/// </summary>
 	
 	SkinModelRender * m_skinModel = nullptr;
-	ShadowModelRender* m_shadowModel = nullptr;
-	ShadowModelRender* m_bgModel = nullptr;
+	SkinModelRender* m_bgModel = nullptr;
 	Light* m_light = nullptr;
 
 	Vector3 m_pos;

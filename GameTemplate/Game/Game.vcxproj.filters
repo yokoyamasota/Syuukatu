@@ -27,9 +27,6 @@
     <Filter Include="MiniEngine\HID">
       <UniqueIdentifier>{9f01cb00-6a78-4c93-86b4-c6d2bd22048e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MiniEngine\raytracing">
-      <UniqueIdentifier>{14187c21-3fa7-4895-9517-5392eeebd991}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ExEngine">
       <UniqueIdentifier>{9b6426bf-a42e-442b-9906-7f04fbaa5270}</UniqueIdentifier>
     </Filter>
@@ -47,6 +44,9 @@
     </Filter>
     <Filter Include="ExEngine\level2D">
       <UniqueIdentifier>{80abc458-e4b9-4836-89c7-3eb842072871}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MiniEngine\math\raytracing">
+      <UniqueIdentifier>{14187c21-3fa7-4895-9517-5392eeebd991}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -135,28 +135,28 @@
       <Filter>MiniEngine</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\TLASBuffer.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\BLASBuffer.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingDescriptorHeaps.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingEngine.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingInstance.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingPSO.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingShaderTable.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\raytracing\RaytracingWorld.cpp">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClCompile>
     <ClCompile Include="..\..\MiniEngine\AnimationClip.cpp">
       <Filter>MiniEngine</Filter>
@@ -326,31 +326,31 @@
       <Filter>MiniEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\TLASBuffer.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\BLASBuffer.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\Raytracing.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingDescriptorHeaps.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingEngine.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingInstance.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingPSO.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingShaderTable.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\raytracing\RaytracingWorld.h">
-      <Filter>MiniEngine\raytracing</Filter>
+      <Filter>MiniEngine\math\raytracing</Filter>
     </ClInclude>
     <ClInclude Include="..\..\MiniEngine\AnimationClip.h">
       <Filter>MiniEngine</Filter>

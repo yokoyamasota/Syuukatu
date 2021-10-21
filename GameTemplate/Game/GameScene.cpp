@@ -4,6 +4,7 @@
 namespace
 {
 	const int PRIORITY_0 = 0;	//—Dæ“x0
+	const int PRIORITY_1 = 1;	//—Dæ“x0
 
 	const Vector3 SKIN_POS = { 0.0f, 0.0f,0.0f };		//•\Ž¦ˆÊ’u
 	const Vector3 SKIN_SCA = { 1.0f, 1.0f,1.0f };			//‘å‚«‚³
@@ -22,14 +23,10 @@ bool GameScene::Start()
 	m_shadowModel->Init("Assets/modelData/unityChan.tkm");*/
 
 	m_skinModel = NewGO<SkinModelRender>(PRIORITY_0, nullptr);
-	m_skinModel->Init("Assets/modelData/unityChan.tkm");
-
-	/*m_bgModel = NewGO<ShadowModelRender>(PRIORITY_0, nullptr);
-	m_bgModel->InitR("Assets/modelData/bg/bg.tkm");*/
-	
+	m_skinModel->Init("Assets/modelData/unityChan.tkm",false);
 	/*m_bgModel = NewGO<SkinModelRender>(PRIORITY_0, nullptr);
-	m_bgModel->Init("Assets/modelData/bg/bg.tkm");*/
-
+	m_bgModel->Init("Assets/modelData/bg/bg.tkm",true);*/
+	int a = 0;
 	m_skinModel->SetPosition({ SKIN_POS });
 	m_skinModel->SetScale({ SKIN_SCA });
 
@@ -51,14 +48,21 @@ GameScene::~GameScene()
 
 void GameScene::Update()
 {
-	if (g_pad[0]->IsPress(enButtonA))
+	float LStickXF;
+	float LStickYF;
+
+	LStickXF = g_pad[0]->GetLStickXF();
+	LStickYF = g_pad[0]->GetLStickYF();
+	m_pos.x -= LStickXF;
+	m_pos.z -= LStickYF;
+	/*if (g_pad[0]->GetLStickXF())
 	{
 		m_pos.x++;
 	}
-	if (g_pad[0]->IsPress(enButtonB))
+	if (g_pad[0]->GetLStickYF())
 	{
-		m_pos.x--;
-	}
+		m_pos.z++;
+	}*/
 
 	m_skinModel->SetPosition(m_pos);
 	/*m_shadowModel->SetPosition(m_pos);*/

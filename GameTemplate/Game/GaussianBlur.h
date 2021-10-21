@@ -3,7 +3,7 @@
 /// <summary>
 /// ガウシアンブラークラス。
 /// </summary>
-class GaussianBlur
+class GaussianBlur : public IGameObject
 {
 public:
 	/// <summary>
