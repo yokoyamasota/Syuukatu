@@ -292,6 +292,7 @@
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="ShadowModelRender.cpp" />
     <ClCompile Include="SkinModelRender.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -367,6 +368,7 @@
     <ClInclude Include="..\..\MiniEngine\VertexBuffer.h" />
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="ShadowModelRender.h" />
     <ClInclude Include="SkinModelRender.h" />
     <ClInclude Include="stdafx.h" />

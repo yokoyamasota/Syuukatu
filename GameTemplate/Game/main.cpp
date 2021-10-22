@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "system/system.h"
 #include "GameScene.h"
+#include "ShadowMap.h"
+#include "GaussianBlur.h"
 
 
 namespace
@@ -33,19 +35,23 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ライトビュープロジェクション行列を計算している。
 	lightCamera.Update();
 
-	//シャドウマップ描画用のレンダリングターゲット
-	//カラーバッファのクリアカラー
-	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };//白
-	RenderTarget shadowMap;
-	shadowMap.Create(
-		1024,//レンダリングターゲットの横幅
-		1024,//レンダリングターゲットの縦幅
-		1,
-		1,
-		DXGI_FORMAT_R32_FLOAT,
-		DXGI_FORMAT_D32_FLOAT,
-		clearColor
-	);
+	////シャドウマップ描画用のレンダリングターゲット
+	////カラーバッファのクリアカラー
+	//float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };//白
+	//RenderTarget shadowMap;
+	//shadowMap.Create(
+	//	1024,//レンダリングターゲットの横幅
+	//	1024,//レンダリングターゲットの縦幅
+	//	1,
+	//	1,
+	//	DXGI_FORMAT_R32_FLOAT,
+	//	DXGI_FORMAT_D32_FLOAT,
+	//	clearColor
+	//);
+
+
+	ShadowMap shadowMap;
+	shadowMap.Init();
 
 	RenderTarget mainRenderTarget;
 	mainRenderTarget.Create(
@@ -85,7 +91,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// 影を受ける背景モデルを初期化
 	ModelInitData bgModelInitData;
 	bgModelInitData.m_fxFilePath = "Assets/shader/ShadowReciever.fx";
-	bgModelInitData.m_expandShaderResoruceView[0] = &shadowMap.GetRenderTargetTexture();
+	bgModelInitData.m_expandShaderResoruceView[0] = &shadowMap.GetShadowMap();
 	bgModelInitData.m_expandConstantBuffer = (void*)&lightCamera.GetViewProjectionMatrix();
 	bgModelInitData.m_expandConstantBufferSize = sizeof(lightCamera.GetViewProjectionMatrix());
 	bgModelInitData.m_tkmFilePath = "Assets/modelData/bg/bg.tkm";
@@ -208,17 +214,20 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
 		// 
-		// シャドウマップにレンダリング
-		// レンダリングターゲットをシャドウマップに変更する
-		renderContext.WaitUntilToPossibleSetRenderTarget(shadowMap);
-		renderContext.SetRenderTargetAndViewport(shadowMap);
-		renderContext.ClearRenderTargetView(shadowMap);
+		//// シャドウマップにレンダリング
+		//// レンダリングターゲットをシャドウマップに変更する
+		//renderContext.WaitUntilToPossibleSetRenderTarget(shadowMap);
+		//renderContext.SetRenderTargetAndViewport(shadowMap);
+		//renderContext.ClearRenderTargetView(shadowMap);
 
-		// 影モデルを描画
-		shadowModel.Draw(renderContext, lightCamera);
+		//// 影モデルを描画
+		//shadowModel.Draw(renderContext, lightCamera);
 
-		// 書き込み完了待ち
-		renderContext.WaitUntilFinishDrawingToRenderTarget(shadowMap);
+		//// 書き込み完了待ち
+		//renderContext.WaitUntilFinishDrawingToRenderTarget(shadowMap);
+		shadowMap.AddShadowModel(&shadowModel);
+
+		shadowMap.RenderToShadowMap(renderContext, lightCamera);
 
 
 		/*renderContext.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);*/

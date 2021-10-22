@@ -9,4 +9,4 @@
 #include "Light.h"				//ƒ‰ƒCƒg
 //#include "ShadowModelRender.h"
 
-#include "GaussianBlur.h"
+//#include "GaussianBlur.h"
