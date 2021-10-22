@@ -2,7 +2,8 @@
 #include "system/system.h"
 #include "GameScene.h"
 #include "ShadowMap.h"
-#include "GaussianBlur.h"
+//#include "GaussianBlur.h"
+#include "Bloom.h"
 
 
 namespace
@@ -35,23 +36,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//ライトビュープロジェクション行列を計算している。
 	lightCamera.Update();
 
-	////シャドウマップ描画用のレンダリングターゲット
-	////カラーバッファのクリアカラー
-	//float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };//白
-	//RenderTarget shadowMap;
-	//shadowMap.Create(
-	//	1024,//レンダリングターゲットの横幅
-	//	1024,//レンダリングターゲットの縦幅
-	//	1,
-	//	1,
-	//	DXGI_FORMAT_R32_FLOAT,
-	//	DXGI_FORMAT_D32_FLOAT,
-	//	clearColor
-	//);
-
-
+	//シャドウマップの初期化
 	ShadowMap shadowMap;
 	shadowMap.Init();
+
 
 	RenderTarget mainRenderTarget;
 	mainRenderTarget.Create(
@@ -64,16 +52,16 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	);
 
 
-	RenderTarget luminnceRenderTarget;
-	//解像度、ミップマップレベル
-	luminnceRenderTarget.Create(
-		1280,		//解像度はメインレンダリングターゲットと同じ。
-		720,		//解像度はメインレンダリングターゲットと同じ。
-		1,
-		1,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_D32_FLOAT
-	);
+	//RenderTarget luminnceRenderTarget;
+	////解像度、ミップマップレベル
+	//luminnceRenderTarget.Create(
+	//	1280,		//解像度はメインレンダリングターゲットと同じ。
+	//	720,		//解像度はメインレンダリングターゲットと同じ。
+	//	1,
+	//	1,
+	//	DXGI_FORMAT_R32G32B32A32_FLOAT,
+	//	DXGI_FORMAT_D32_FLOAT
+	//);
 	
 
 	// シャドウマップに描画するモデルを初期化する
@@ -86,6 +74,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	shadowModelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
 	Model shadowModel;
 	shadowModel.Init(shadowModelInitData);
+
+	shadowMap.AddShadowModel(&shadowModel);
 	
 
 	// 影を受ける背景モデルを初期化
@@ -99,56 +89,60 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	Model bgModel;
 	bgModel.Init(bgModelInitData);
 
-	SpriteInitData luminanceSpriteInitData;
-	//輝度抽出用のシェーダーのファイルパスを指定する。
-	luminanceSpriteInitData.m_fxFilePath = "Assets/shader/PostEffect.fx";
-	//頂点シェーダーのエントリーポイントを指定する。
-	luminanceSpriteInitData.m_vsEntryPointFunc = "VSMain";
-	//ピクセルシェーダーのエントリーポイントを指定する。
-	luminanceSpriteInitData.m_psEntryPoinFunc = "PSSamplingLuminance";
-	//スプライトの幅と高さはluminnceRenderTargetと同じ。
-	luminanceSpriteInitData.m_width = 1280;
-	luminanceSpriteInitData.m_height = 720;
-	//テクスチャはメインレンダリングターゲットのカラーバッファ。
-	luminanceSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-	//描き込むレンダリングターゲットのフォーマットを指定する。
-	luminanceSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	//ブルームの初期化
+	Bloom bloom;
+	bloom.Init(mainRenderTarget);
 
-	Sprite luminanceSprite;
-	luminanceSprite.Init(luminanceSpriteInitData);
+	//SpriteInitData luminanceSpriteInitData;
+	////輝度抽出用のシェーダーのファイルパスを指定する。
+	//luminanceSpriteInitData.m_fxFilePath = "Assets/shader/PostEffect.fx";
+	////頂点シェーダーのエントリーポイントを指定する。
+	//luminanceSpriteInitData.m_vsEntryPointFunc = "VSMain";
+	////ピクセルシェーダーのエントリーポイントを指定する。
+	//luminanceSpriteInitData.m_psEntryPoinFunc = "PSSamplingLuminance";
+	////スプライトの幅と高さはluminnceRenderTargetと同じ。
+	//luminanceSpriteInitData.m_width = 1280;
+	//luminanceSpriteInitData.m_height = 720;
+	////テクスチャはメインレンダリングターゲットのカラーバッファ。
+	//luminanceSpriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+	////描き込むレンダリングターゲットのフォーマットを指定する。
+	//luminanceSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
-	//ガウシアンブラーオブジェクト生成
-	GaussianBlur gaussianBlur;
-	//ガウシアンブラーを初期化
-	gaussianBlur.Init(&luminnceRenderTarget.GetRenderTargetTexture());
+	//Sprite luminanceSprite;
+	//luminanceSprite.Init(luminanceSpriteInitData);
 
-	SpriteInitData finalSpriteInitData;
-	finalSpriteInitData.m_textures[0] = &gaussianBlur.GetBokeTexture();
-	//解像度はmainRenderTargetの幅と高さ。
-	finalSpriteInitData.m_width = 1280;
-	finalSpriteInitData.m_height = 720;
-	//ぼかした画像を、通常の2Dとしてメインレンダリングターゲットに描画するので、
-	//2D用のシェーダーを使用する。
-	finalSpriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
-	//ただし、加算合成で描画するので、アルファブレンディングモードを加算にする。
-	finalSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
-	//カラーバッファのフォーマットは例によって、32ビット浮動小数点バッファ。
-	finalSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	////ガウシアンブラーオブジェクト生成
+	//GaussianBlur gaussianBlur;
+	////ガウシアンブラーを初期化
+	//gaussianBlur.Init(&luminnceRenderTarget.GetRenderTargetTexture());
 
-	Sprite finalSprite;
-	//初期化情報を元に加算合成用のスプライトを初期化する。
-	finalSprite.Init(finalSpriteInitData);
+	//SpriteInitData finalSpriteInitData;
+	//finalSpriteInitData.m_textures[0] = &gaussianBlur.GetBokeTexture();
+	////解像度はmainRenderTargetの幅と高さ。
+	//finalSpriteInitData.m_width = 1280;
+	//finalSpriteInitData.m_height = 720;
+	////ぼかした画像を、通常の2Dとしてメインレンダリングターゲットに描画するので、
+	////2D用のシェーダーを使用する。
+	//finalSpriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
+	////ただし、加算合成で描画するので、アルファブレンディングモードを加算にする。
+	//finalSpriteInitData.m_alphaBlendMode = AlphaBlendMode_Add;
+	////カラーバッファのフォーマットは例によって、32ビット浮動小数点バッファ。
+	//finalSpriteInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
-	SpriteInitData spriteInitData;
-	//テクスチャはmainRenderTargetのカラーバッファ。
-	spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-	spriteInitData.m_width = 1280;
-	spriteInitData.m_height = 720;
-	//モノクロ用のシェーダーを指定する。
-	spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
+	//Sprite finalSprite;
+	////初期化情報を元に加算合成用のスプライトを初期化する。
+	//finalSprite.Init(finalSpriteInitData);
 
-	Sprite copyToFrameBufferSprite;
-	copyToFrameBufferSprite.Init(spriteInitData);
+	//SpriteInitData spriteInitData;
+	////テクスチャはmainRenderTargetのカラーバッファ。
+	//spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+	//spriteInitData.m_width = mainRenderTarget.GetWidth();
+	//spriteInitData.m_height = mainRenderTarget.GetHeight();
+	////モノクロ用のシェーダーを指定する。
+	//spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
+
+	//Sprite copyToFrameBufferSprite;
+	//copyToFrameBufferSprite.Init(spriteInitData);
 
 	Vector3 m_pos;
 	m_pos = { 0,0,0 };
@@ -178,10 +172,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		/*Quaternion qAddRot;
 		qAddRot.SetRotationDegX(g_pad[0]->GetLStickYF());
 		g_camera3D->RotateOriginTarget(qAddRot);*/
-
-		//SkinModelRender * m_skinModel = nullptr;
-		//m_skinModel->SetPosition(m_pos);
-
+		
 		shadowModel.UpdateWorldMatrix(
 			m_pos,
 			g_quatIdentity,
@@ -194,14 +185,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		LStickYF = g_pad[0]->GetLStickYF();
 		m_pos.x -= LStickXF;
 		m_pos.z -= LStickYF;
-		/*if (g_pad[0]->GetLStickXF())
-		{
-			m_pos.x++;
-		}
-		if (g_pad[0]->GetLStickYF())
-		{
-			m_pos.z++;
-		}*/
 
 		//////////////////////////////////////
 		//ここから絵を描くコードを記述する。
@@ -213,20 +196,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
-		// 
-		//// シャドウマップにレンダリング
-		//// レンダリングターゲットをシャドウマップに変更する
-		//renderContext.WaitUntilToPossibleSetRenderTarget(shadowMap);
-		//renderContext.SetRenderTargetAndViewport(shadowMap);
-		//renderContext.ClearRenderTargetView(shadowMap);
-
-		//// 影モデルを描画
-		//shadowModel.Draw(renderContext, lightCamera);
-
-		//// 書き込み完了待ち
-		//renderContext.WaitUntilFinishDrawingToRenderTarget(shadowMap);
-		shadowMap.AddShadowModel(&shadowModel);
-
+		
+		// シャドウマップにレンダリング
 		shadowMap.RenderToShadowMap(renderContext, lightCamera);
 
 
@@ -243,44 +214,42 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 
 		// ブルームの処理
+		bloom.RenderToLuminnceRenderTarget(renderContext, mainRenderTarget);
 
-		//輝度抽出
-		//輝度抽出用のレンダリングターゲットに変更。
-		renderContext.WaitUntilToPossibleSetRenderTarget(luminnceRenderTarget);
-		//レンダリングターゲットを設定。
-		renderContext.SetRenderTargetAndViewport(luminnceRenderTarget);
-		//レンダリングターゲットをクリア。
-		renderContext.ClearRenderTargetView(luminnceRenderTarget);
-		//輝度抽出を行う。
-		luminanceSprite.Draw(renderContext);
-		//レンダリングターゲットへの書き込み終了待ち。
-		renderContext.WaitUntilFinishDrawingToRenderTarget(luminnceRenderTarget);
+		////輝度抽出
+		////輝度抽出用のレンダリングターゲットに変更。
+		//renderContext.WaitUntilToPossibleSetRenderTarget(luminnceRenderTarget);
+		////レンダリングターゲットを設定。
+		//renderContext.SetRenderTargetAndViewport(luminnceRenderTarget);
+		////レンダリングターゲットをクリア。
+		//renderContext.ClearRenderTargetView(luminnceRenderTarget);
+		////輝度抽出を行う。
+		//luminanceSprite.Draw(renderContext);
+		////レンダリングターゲットへの書き込み終了待ち。
+		//renderContext.WaitUntilFinishDrawingToRenderTarget(luminnceRenderTarget);
 
 
-		//ガウシアンブラーを実行する
-		gaussianBlur.ExecuteOnGPU(renderContext, 1);
+		////ガウシアンブラーを実行する
+		//gaussianBlur.ExecuteOnGPU(renderContext, 1);
 
-		//ボケ画像をメインレンダリングターゲットに加算合成
-		//レンダリングターゲットとして利用できるまで待つ。
-		renderContext.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
-		//レンダリングターゲットを設定。
-		renderContext.SetRenderTargetAndViewport(mainRenderTarget);
-		//最終合成。
-		finalSprite.Draw(renderContext);
-		//レンダリングターゲットへの書き込み終了待ち。
-		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+		////ボケ画像をメインレンダリングターゲットに加算合成
+		////レンダリングターゲットとして利用できるまで待つ。
+		//renderContext.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);
+		////レンダリングターゲットを設定。
+		//renderContext.SetRenderTargetAndViewport(mainRenderTarget);
+		////最終合成。
+		//finalSprite.Draw(renderContext);
+		////レンダリングターゲットへの書き込み終了待ち。
+		//renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 
-		// メインレンダリングターゲットの絵をフレームバッファーにコピー
-		renderContext.SetRenderTarget(
-			g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
-			g_graphicsEngine->GetCurrentFrameBuffuerDSV()
-		);
-		renderContext.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
-		
-		//影を受ける背景を描画
-		/*GameObjectManager::GetInstance()->ExecuteRender(renderContext);
-		bgModel.Draw(renderContext);*/
-		copyToFrameBufferSprite.Draw(renderContext);
+		//// メインレンダリングターゲットの絵をフレームバッファーにコピー
+		//renderContext.SetRenderTarget(
+		//	g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
+		//	g_graphicsEngine->GetCurrentFrameBuffuerDSV()
+		//);
+		//renderContext.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
+
+		//copyToFrameBufferSprite.Draw(renderContext);
 
 		g_engine->EndFrame();
 	}

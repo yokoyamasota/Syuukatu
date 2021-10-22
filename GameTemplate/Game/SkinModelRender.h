@@ -3,7 +3,7 @@
 class Model;
 class Light;
 
-class GaussianBlur;
+//class GaussianBlur;
 
 class SkinModelRender : public IGameObject
 {
@@ -15,7 +15,7 @@ private:
 
 	Light* m_light = nullptr;
 
-	GaussianBlur* gaussianBlur = nullptr;
+	/*GaussianBlur* gaussianBlur = nullptr;*/
 
 	//影描画用のライトカメラ
 	Camera m_lightCamera;

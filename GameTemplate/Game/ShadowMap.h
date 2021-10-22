@@ -25,5 +25,6 @@ private:
 	RenderTarget m_shadowMap;
 	// シャドウマップに描画するモデルを初期化する
 	ModelInitData shadowModelInitData;
+	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };//白
 };
 

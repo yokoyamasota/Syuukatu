@@ -4,7 +4,6 @@
 
 void ShadowMap::Init()
 {
-	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };//白
 	
 	m_shadowMap.Create(
 		1024,//レンダリングターゲットの横幅
@@ -15,8 +14,6 @@ void ShadowMap::Init()
 		DXGI_FORMAT_D32_FLOAT,
 		clearColor
 	);
-	
-
 }
 
 
