@@ -10,7 +10,7 @@ private:
 	
 	SkinModelRender * m_skinModel = nullptr;
 	SkinModelRender* m_bgModel = nullptr;
-	Light* m_light = nullptr;
+	/*Light* m_light = nullptr;*/
 
 	Vector3 m_pos;
 

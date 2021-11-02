@@ -53,16 +53,16 @@ void Bloom::Init(RenderTarget& mainRenderTarget)
 	//初期化情報を元に加算合成用のスプライトを初期化する。
 	finalSprite.Init(finalSpriteInitData);
 
-	
-	//テクスチャはmainRenderTargetのカラーバッファ。
-	spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-	spriteInitData.m_width = mainRenderTarget.GetWidth();
-	spriteInitData.m_height = mainRenderTarget.GetHeight();
-	//モノクロ用のシェーダーを指定する。
-	spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
+	//
+	////テクスチャはmainRenderTargetのカラーバッファ。
+	//spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+	//spriteInitData.m_width = mainRenderTarget.GetWidth();
+	//spriteInitData.m_height = mainRenderTarget.GetHeight();
+	////モノクロ用のシェーダーを指定する。
+	//spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
 
-	
-	copyToFrameBufferSprite.Init(spriteInitData);
+	//
+	//copyToFrameBufferSprite.Init(spriteInitData);
 
 
 }
@@ -95,13 +95,13 @@ void Bloom::RenderToLuminnceRenderTarget(RenderContext& rc, RenderTarget& mainRe
 	//レンダリングターゲットへの書き込み終了待ち。
 	rc.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 
-	// メインレンダリングターゲットの絵をフレームバッファーにコピー
-	rc.SetRenderTarget(
-		g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
-		g_graphicsEngine->GetCurrentFrameBuffuerDSV()
-	);
-	rc.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
+	//// メインレンダリングターゲットの絵をフレームバッファーにコピー
+	//rc.SetRenderTarget(
+	//	g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
+	//	g_graphicsEngine->GetCurrentFrameBuffuerDSV()
+	//);
+	//rc.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
 
-	copyToFrameBufferSprite.Draw(rc);
+	//copyToFrameBufferSprite.Draw(rc);
 
 }

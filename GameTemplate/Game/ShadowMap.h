@@ -17,12 +17,12 @@ public:
 
 	Texture& GetShadowMap()
 	{
-		return m_shadowMap.GetRenderTargetTexture();
+		return m_shadowMapRender.GetRenderTargetTexture();
 	}
 
 private:
 	std::vector<Model*> m_models;
-	RenderTarget m_shadowMap;
+	RenderTarget m_shadowMapRender;
 	// シャドウマップに描画するモデルを初期化する
 	ModelInitData shadowModelInitData;
 	float clearColor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };//白

@@ -5,7 +5,7 @@
 void ShadowMap::Init()
 {
 	
-	m_shadowMap.Create(
+	m_shadowMapRender.Create(
 		1024,//レンダリングターゲットの横幅
 		1024,//レンダリングターゲットの縦幅
 		1,
@@ -17,11 +17,12 @@ void ShadowMap::Init()
 }
 
 
-void ShadowMap::RenderToShadowMap(RenderContext& rc,Camera& lightCamera)
+
+void ShadowMap::RenderToShadowMap(RenderContext& rc, Camera& lightCamera)
 {
-	rc.WaitUntilToPossibleSetRenderTarget(m_shadowMap);
-	rc.SetRenderTargetAndViewport(m_shadowMap);
-	rc.ClearRenderTargetView(m_shadowMap);
+	rc.WaitUntilToPossibleSetRenderTarget(m_shadowMapRender);
+	rc.SetRenderTargetAndViewport(m_shadowMapRender);
+	rc.ClearRenderTargetView(m_shadowMapRender);
 
 	for (auto* shadowModel : m_models) {
 		// 影モデルを描画
@@ -29,6 +30,6 @@ void ShadowMap::RenderToShadowMap(RenderContext& rc,Camera& lightCamera)
 	}
 
 	// 書き込み完了待ち
-	rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMap);
+	rc.WaitUntilFinishDrawingToRenderTarget(m_shadowMapRender);
 
 }

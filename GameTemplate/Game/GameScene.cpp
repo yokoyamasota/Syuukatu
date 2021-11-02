@@ -14,21 +14,21 @@ namespace
 
 bool GameScene::Start()
 {
-	//ライトオブジェクト生成
-	m_light = NewGO<Light>(PRIORITY_0, "Light");
-	//ディレクションライトライトをセット
-	m_light->SetDirectionLightData();
+	////ライトオブジェクト生成
+	//m_light = NewGO<Light>(PRIORITY_0, "Light");
+	////ディレクションライトライトをセット
+	//m_light->SetDirectionLightData();
 
 	/*m_shadowModel = NewGO<ShadowModelRender>(PRIORITY_0, nullptr);
 	m_shadowModel->Init("Assets/modelData/unityChan.tkm");*/
 
-	m_skinModel = NewGO<SkinModelRender>(PRIORITY_0, nullptr);
+	/*m_skinModel = NewGO<SkinModelRender>(PRIORITY_0, nullptr);
 	m_skinModel->Init("Assets/modelData/unityChan.tkm",false);
-	/*m_bgModel = NewGO<SkinModelRender>(PRIORITY_0, nullptr);
+	m_bgModel = NewGO<SkinModelRender>(PRIORITY_1, nullptr);
 	m_bgModel->Init("Assets/modelData/bg/bg.tkm",true);*/
-	int a = 0;
+	/*int a = 0;
 	m_skinModel->SetPosition({ SKIN_POS });
-	m_skinModel->SetScale({ SKIN_SCA });
+	m_skinModel->SetScale({ SKIN_SCA });*/
 
 	/*m_shadowModel->SetPosition({ SKIN_POS1 });
 	m_shadowModel->SetScale({ SKIN_SCA });*/
@@ -42,7 +42,7 @@ bool GameScene::Start()
 
 GameScene::~GameScene()
 {
-	DeleteGO(m_light);
+	///*DeleteGO(m_light);*/
 
 }
 
@@ -65,6 +65,7 @@ void GameScene::Update()
 	}*/
 
 	m_skinModel->SetPosition(m_pos);
+	
 	/*m_shadowModel->SetPosition(m_pos);*/
 	/*m_bgModel->SetPosition(m_pos);*/
 	
