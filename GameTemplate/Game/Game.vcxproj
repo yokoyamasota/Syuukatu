@@ -293,6 +293,7 @@
     <ClCompile Include="GaussianBlur.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="RenderingEngine.cpp" />
     <ClCompile Include="ShadowMap.cpp" />
     <ClCompile Include="ShadowModelRender.cpp" />
     <ClCompile Include="SkinModelRender.cpp" />
@@ -370,6 +371,7 @@
     <ClInclude Include="Bloom.h" />
     <ClInclude Include="GaussianBlur.h" />
     <ClInclude Include="Light.h" />
+    <ClInclude Include="RenderingEngine.h" />
     <ClInclude Include="ShadowMap.h" />
     <ClInclude Include="ShadowModelRender.h" />
     <ClInclude Include="SkinModelRender.h" />

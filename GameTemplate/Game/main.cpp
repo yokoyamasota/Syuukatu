@@ -4,6 +4,7 @@
 #include "ShadowMap.h"
 //#include "GaussianBlur.h"
 #include "Bloom.h"
+#include "RenderingEngine.h"
 
 
 namespace
@@ -23,83 +24,63 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 	//
-	//影描画用のライトカメラ
-	Camera lightCamera;
-	//カメラの位置を設定。これはライトの位置。
-	lightCamera.SetPosition(200, 500, 500);
-	//カメラの注視点を設定。これがライトが照らしている場所。
-	lightCamera.SetTarget(0, 50, 0);
-	//方向を設定
-	lightCamera.SetUp({ 1.0f,0.0f,0.0f });
-	//画角
-	lightCamera.SetViewAngle(Math::DegToRad(50.0f));
-	//ライトビュープロジェクション行列を計算している。
-	lightCamera.Update();
+	////影描画用のライトカメラ
+	//Camera lightCamera;
+	////カメラの位置を設定。これはライトの位置。
+	//lightCamera.SetPosition(200, 500, 500);
+	////カメラの注視点を設定。これがライトが照らしている場所。
+	//lightCamera.SetTarget(0, 50, 0);
+	////方向を設定
+	//lightCamera.SetUp({ 1.0f,0.0f,0.0f });
+	////画角
+	//lightCamera.SetViewAngle(Math::DegToRad(50.0f));
+	////ライトビュープロジェクション行列を計算している。
+	//lightCamera.Update();
 
-	//シャドウマップの初期化
-	ShadowMap shadowMap;
-	shadowMap.Init();
+	////シャドウマップの初期化
+	//ShadowMap shadowMap;
+	//shadowMap.Init();
 
 
-	RenderTarget mainRenderTarget;
-	mainRenderTarget.Create(
-		1280,
-		720,
-		1,
-		1,
-		DXGI_FORMAT_R32G32B32A32_FLOAT,
-		DXGI_FORMAT_D32_FLOAT
-	);
+	//RenderTarget mainRenderTarget;
+	//mainRenderTarget.Create(
+	//	1280,
+	//	720,
+	//	1,
+	//	1,
+	//	DXGI_FORMAT_R32G32B32A32_FLOAT,
+	//	DXGI_FORMAT_D32_FLOAT
+	//);
 
-	//// シャドウマップに描画するモデルを初期化する
-	//ModelInitData shadowModelInitData;
+	////ブルームの初期化
+	//Bloom bloom;
+	//bloom.Init(mainRenderTarget);
 
-	//// シャドウマップ描画用のシェーダーを指定する
-	//shadowModelInitData.m_fxFilePath = "Assets/shader/DrawShadowMap.fx";
-	//shadowModelInitData.m_tkmFilePath = "Assets/modelData/unityChan.tkm";
-	//// カラーバッファのフォーマットに変更が入ったので、こちらも変更する。
-	//shadowModelInitData.m_colorBufferFormat[0] = DXGI_FORMAT_R32_FLOAT;
-	//Model shadowModel;
-	//shadowModel.Init(shadowModelInitData);
-	//shadowMap.AddShadowModel(&shadowModel);
+	//SpriteInitData spriteInitData;
+	////テクスチャはmainRenderTargetのカラーバッファ。
+	//spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
+	//spriteInitData.m_width = mainRenderTarget.GetWidth();
+	//spriteInitData.m_height = mainRenderTarget.GetHeight();
+	////モノクロ用のシェーダーを指定する。
+	//spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
 
-	
-
-	//// 影を受ける背景モデルを初期化
-	//ModelInitData bgModelInitData;
-	//bgModelInitData.m_fxFilePath = "Assets/shader/ShadowReciever.fx";
-	//bgModelInitData.m_expandShaderResoruceView[0] = &shadowMap.GetShadowMap();
-	//bgModelInitData.m_expandConstantBuffer = (void*)&lightCamera.GetViewProjectionMatrix();
-	//bgModelInitData.m_expandConstantBufferSize = sizeof(lightCamera.GetViewProjectionMatrix());
-	//bgModelInitData.m_tkmFilePath = "Assets/modelData/bg/bg.tkm";
-
-	//Model bgModel;
-	//bgModel.Init(bgModelInitData);
-
-	//ブルームの初期化
-	Bloom bloom;
-	bloom.Init(mainRenderTarget);
-
-	SpriteInitData spriteInitData;
-	//テクスチャはmainRenderTargetのカラーバッファ。
-	spriteInitData.m_textures[0] = &mainRenderTarget.GetRenderTargetTexture();
-	spriteInitData.m_width = mainRenderTarget.GetWidth();
-	spriteInitData.m_height = mainRenderTarget.GetHeight();
-	//モノクロ用のシェーダーを指定する。
-	spriteInitData.m_fxFilePath = "Assets/shader/2D.fx";
-
-	Sprite copyToFrameBufferSprite;
-	copyToFrameBufferSprite.Init(spriteInitData);
+	//Sprite copyToFrameBufferSprite;
+	//copyToFrameBufferSprite.Init(spriteInitData);
 
 	/*Vector3 m_pos;
 	m_pos = { 0,0,0 };*/
 
+	/*g_camera3D->SetPosition({ 0.0f, 130.0f, 600.0f });
+	g_camera3D->SetTarget({ 0.0f, 130.0f, 0.0f });*/
+
+
+
+	RenderingEngine renderingEngine;
+	renderingEngine.Init();
+
 	//ゲームオブジェクトマネージャーのインスタンスを作成する。
 	GameObjectManager::CreateInstance();
 	PhysicsWorld::CreateInstance();
-
-	/*g_camera3D->SetPosition({ 0.0f, 130.0f, 600.0f });
-	g_camera3D->SetTarget({ 0.0f, 130.0f, 0.0f });*/
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -119,9 +100,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	m_light->SetDirectionLightData();
 
 	m_skinModel = NewGO<SkinModelRender>(PRIORITY_0, nullptr);
-	m_skinModel->Init("Assets/modelData/unityChan.tkm", false, &shadowMap,&lightCamera);
+	m_skinModel->Init("Assets/modelData/unityChan.tkm", false, renderingEngine.GetShadowMap(),renderingEngine.GetLightCamera());
 	m_bgModel = NewGO<SkinModelRender>(1, nullptr);
-	m_bgModel->Init("Assets/modelData/bg/bg.tkm", true, &shadowMap,&lightCamera);
+	m_bgModel->Init("Assets/modelData/bg/bg.tkm", true, renderingEngine.GetShadowMap(), renderingEngine.GetLightCamera());
 	//shadowMap.AddShadowModel(m_skinModelRender->GetShadowModel());
 
 	//// 影を受ける背景モデルを初期化
@@ -169,35 +150,37 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		//////////////////////////////////////
 		//絵を描くコードを書くのはここまで！！！
 		//////////////////////////////////////
+
+		renderingEngine.RenderEngine(renderContext);
 		
 		// シャドウマップにレンダリング
 		/*shadowMap.RenderToShadowMap(renderContext, m_skinModelRender->GetLightCamera());*/
-		shadowMap.RenderToShadowMap(renderContext, lightCamera);
-		
+		//shadowMap.RenderToShadowMap(renderContext, lightCamera);
+		//
 
 
-		/*renderContext.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);*/
-		//レンダリングターゲットを設定。
-		renderContext.SetRenderTargetAndViewport(mainRenderTarget);
-		//レンダリングターゲットをクリア。
-		renderContext.ClearRenderTargetView(mainRenderTarget);
+		///*renderContext.WaitUntilToPossibleSetRenderTarget(mainRenderTarget);*/
+		////レンダリングターゲットを設定。
+		//renderContext.SetRenderTargetAndViewport(mainRenderTarget);
+		////レンダリングターゲットをクリア。
+		//renderContext.ClearRenderTargetView(mainRenderTarget);
 
-		GameObjectManager::GetInstance()->ExecuteRender(renderContext);
+		//GameObjectManager::GetInstance()->ExecuteRender(renderContext);
 
-		//レンダリングターゲットへの書き込み終了待ち。
-		renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
+		////レンダリングターゲットへの書き込み終了待ち。
+		//renderContext.WaitUntilFinishDrawingToRenderTarget(mainRenderTarget);
 
-		// ブルームの処理
-		bloom.RenderToLuminnceRenderTarget(renderContext, mainRenderTarget);
+		//// ブルームの処理
+		//bloom.RenderToLuminnceRenderTarget(renderContext, mainRenderTarget);
 
-		// メインレンダリングターゲットの絵をフレームバッファーにコピー
-		renderContext.SetRenderTarget(
-			g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
-			g_graphicsEngine->GetCurrentFrameBuffuerDSV()
-		);
-		renderContext.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
+		//// メインレンダリングターゲットの絵をフレームバッファーにコピー
+		//renderContext.SetRenderTarget(
+		//	g_graphicsEngine->GetCurrentFrameBuffuerRTV(),
+		//	g_graphicsEngine->GetCurrentFrameBuffuerDSV()
+		//);
+		//renderContext.SetViewportAndScissor(g_graphicsEngine->GetFrameBufferViewport());
 
-		copyToFrameBufferSprite.Draw(renderContext);
+		//copyToFrameBufferSprite.Draw(renderContext);
 
 		g_engine->EndFrame();
 	}
